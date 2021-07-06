@@ -11,6 +11,8 @@ public class EntityManager {
 	private Handler handler;
 	private Player player;
 	private ArrayList<Entity> entities;
+	
+	//this is used to determine render order of entities
 	private Comparator<Entity> renderSorter = new Comparator<Entity>()
 			{
 				@Override
@@ -53,6 +55,7 @@ public class EntityManager {
 			entities.get(i).tick();
 		}
 		
+		//sort render order before rendering
 		entities.sort(renderSorter);
 		
 	}

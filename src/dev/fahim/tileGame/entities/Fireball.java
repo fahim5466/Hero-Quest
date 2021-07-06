@@ -25,7 +25,7 @@ public class Fireball extends Projectile{
 	@Override
 	public void render(Graphics g) {
 		
-		g.drawImage(Utils.rotateImage(Assets.fireball,rotate()), (int) (x - handler.getGameCamera().getxOffset()), (int) (y - handler.getGameCamera().getyOffset()), w, h, null);
+		g.drawImage(Utils.rotateImage(Assets.fireball,getRotation()), (int) (x - handler.getGameCamera().getxOffset()), (int) (y - handler.getGameCamera().getyOffset()), w, h, null);
 		
 		/*
 		g.setColor(Color.red);

@@ -1,6 +1,0 @@
-grass - 0
-dirt - 1
-stone - 2
-tree - 3
-greens - 1004-1091
-greens2 - 1092-1273

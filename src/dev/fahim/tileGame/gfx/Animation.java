@@ -9,7 +9,7 @@ public class Animation {
 	private int speed, index;
 	private BufferedImage[] frames;
 	private Timer timer;
-	private int cycle=0;
+	private int cycle=0; //how many animation cycles have been completed
 	
 	public Animation(int speed, BufferedImage[] frames)
 	{

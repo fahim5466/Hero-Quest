@@ -39,9 +39,17 @@ public class Notif extends State{
 		
 		g.drawImage(Assets.whiteBG, 0, 0, handler.getWidth(), handler.getHeight(), null);
 		uiManager.render(g);
-		int w = s.length()*10;
-		int h = w/300;
-		int t = Text.drawPara(g, s, handler.getWidth()/2-w/2, handler.getHeight()/2-h/2, w);
+		
+		String paras[] = s.split("\n");
+		int lastY = 50;
+		for(int i=0; i<paras.length; i++)
+		{
+			String s = paras[i];
+			int w = s.length()*10;
+			lastY = Text.drawPara(g, s, 150, lastY, w);
+		}
+		
+		//int t = Text.drawPara(g, s, handler.getWidth()/2-w/2, handler.getHeight()/2-h/2, w);
 		
 		
 	}

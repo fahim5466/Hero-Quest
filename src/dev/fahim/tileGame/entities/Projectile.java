@@ -20,6 +20,7 @@ public abstract class Projectile extends Entity{
 	@Override
 	public void tick() {
 		
+		//if projectile moves out of map remove it
 		if(x<-100 || y<-100 || x>handler.getWidth()+700 || y>handler.getHeight()+700)
 		{
 			handler.getWorld().getEntityManager().removeEntity(this);
@@ -58,7 +59,7 @@ public abstract class Projectile extends Entity{
 		
 	}
 	
-	public int rotate()
+	public int getRotation()
 	{
 		if(direction==2){return 0;}
 		else if(direction==3){return 90;}

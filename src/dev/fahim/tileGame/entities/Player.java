@@ -105,23 +105,6 @@ public class Player extends Creature{
 		
 	}
 	
-	public void drawHealthBar(Graphics g)
-	{
-		g.setColor(new Color(0,255,0,178));
-		if(health<50){g.setColor(new Color(0,255,255,128));}
-		if(health<25){g.setColor(new Color(255,0,0,128));}
-		g.drawImage(Assets.bar,
-			  	(int)(x + bounds.x - 15 - handler.getGameCamera().getxOffset()),
-			  	(int)(y + bounds.y + 20 - handler.getGameCamera().getyOffset()),
-			  	80,bounds.height+10,null
-			  );
-		g.fillRect(
-				  	(int)(x + bounds.x - 10 - handler.getGameCamera().getxOffset()),
-				  	(int)(y + bounds.y + 25 - handler.getGameCamera().getyOffset()),
-				  	(int)(70*health)/100,bounds.height
-				  );
-	}
-	
 	public Controller getController()
 	{
 		return controller;

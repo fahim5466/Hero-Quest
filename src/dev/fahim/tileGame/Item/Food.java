@@ -13,9 +13,10 @@ public class Food {
 	public Food(Handler handler)
 	{
 		this.handler = handler;
+		init();
 	}
 	
-	public void init()
+	private void init()
 	{
 		
 		foods = new ArrayList<Item>();

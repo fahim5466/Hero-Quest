@@ -11,6 +11,7 @@ import dev.fahim.tileGame.utils.Utils;
 public class Arrow extends Projectile{
 	
 	public Arrow(Handler handler, double x, double y, int w, int h, int direction) {
+		
 		super(handler, x, y, w, h, direction);
 		this.speed=10;
 		this.damage=5;
@@ -27,7 +28,7 @@ public class Arrow extends Projectile{
 	@Override
 	public void render(Graphics g) {
 		
-		g.drawImage(Utils.rotateImage(Assets.arrow,rotate()), (int) (x - handler.getGameCamera().getxOffset()), (int) (y - handler.getGameCamera().getyOffset()), w, h, null);
+		g.drawImage(Utils.rotateImage(Assets.arrow,getRotation()), (int) (x - handler.getGameCamera().getxOffset()), (int) (y - handler.getGameCamera().getyOffset()), w, h, null);
 		
 		/*
 		g.setColor(Color.red);

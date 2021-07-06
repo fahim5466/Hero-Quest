@@ -10,7 +10,7 @@ public abstract class Entity {
 	protected Handler handler;
 	protected double x,y;
 	protected int w,h;
-	protected Rectangle bounds;
+	protected Rectangle bounds; //this is the entity collision box
 	
 	public Entity(Handler handler, double x, double y, int w, int h)
 	{

@@ -19,10 +19,14 @@ public class Loot extends Entity implements Clickable{
 	{
 		int mx = handler.getGame().getMouseManager().getMouseX();
 		int my = handler.getGame().getMouseManager().getMouseY();
+		
 		boolean click = handler.getGame().getMouseManager().isLeftPresssed();
+		
 		int tx=(int) (x-handler.getGameCamera().getxOffset());
 		int ty=(int) (y-handler.getGameCamera().getyOffset());
+		
 		boolean hovering = (tx<=mx && mx<=tx+w && ty<=my && my<=ty+h);
+		
 		if(hovering)
 		{
 			Utils.changeCursor(handler, 1);
@@ -31,7 +35,9 @@ public class Loot extends Entity implements Clickable{
 		{
 			Utils.changeCursor(handler, 0);
 		}
+		
 		if(hovering && click){return true;}
+		
 		return false;	
 	}
 	

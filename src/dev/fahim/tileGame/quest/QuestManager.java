@@ -7,14 +7,18 @@ import dev.fahim.tileGame.Handler;
 public class QuestManager {
 
 	private Handler handler;
+	private QuestBank questBank;
 	private ArrayList<Quest> quests;
 	private ArrayList<Quest> delete;
 	
 	public QuestManager(Handler handler)
 	{
 		this.handler = handler;
+		
 		quests = new ArrayList<Quest>();
 		delete = new ArrayList<Quest>();
+		
+		questBank = new QuestBank(handler, this);
 	}
 	
 	public void tick()

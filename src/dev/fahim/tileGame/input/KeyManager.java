@@ -20,6 +20,23 @@ public class KeyManager implements KeyListener{
 		
 		for(int i=0;i<keys.length;i++)
 		{
+			
+			//tick 1: player first presses a key and justPressed is set to true.
+			// 		  during this tick keyPressed function returns true for that key and player is pressing that key
+			
+			//tick 2: justPressed is set to false and cantPress is set to true
+			//		  during this tick keyPressed function returns false for that key even though player is pressing that key
+			
+			//suppose player lets go of the key at tick 'n'
+			
+			//tick 3 to n-1: during this tick keyPressed function returns false for that key even though player is pressing that key
+			
+			//tick n: player lets go of the key and cantPress is set to false
+			//   	  during this tick keyPressed function returns false for that key and player is not pressing that key
+			
+			//From the time the player presses the key until he lets go of it
+			//the keypress is acknowledged for only one tick
+			
 			if(cantPress[i] && !keys[i])
 			{
 				cantPress[i]=false;

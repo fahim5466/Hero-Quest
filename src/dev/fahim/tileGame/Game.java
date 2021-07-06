@@ -3,286 +3,211 @@ package dev.fahim.tileGame;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
-
-import dev.fahim.tileGame.Item.Food;
-import dev.fahim.tileGame.dialogue.DialogueBank;
 import dev.fahim.tileGame.display.Display;
 import dev.fahim.tileGame.entities.Player;
 import dev.fahim.tileGame.gfx.Assets;
 import dev.fahim.tileGame.gfx.GameCamera;
 import dev.fahim.tileGame.input.KeyManager;
 import dev.fahim.tileGame.input.MouseManager;
-import dev.fahim.tileGame.quest.QuestBank;
 import dev.fahim.tileGame.quest.QuestManager;
 import dev.fahim.tileGame.sounds.SoundManager;
 import dev.fahim.tileGame.states.GameState;
 import dev.fahim.tileGame.states.InGameUI;
 import dev.fahim.tileGame.states.Inventory;
 import dev.fahim.tileGame.states.MenuState;
+import dev.fahim.tileGame.states.Notif;
 import dev.fahim.tileGame.states.Quests;
 import dev.fahim.tileGame.states.State;
 import dev.fahim.tileGame.states.StateManager;
+import dev.fahim.tileGame.ui.Clicker;
 import dev.fahim.tileGame.utils.Utils;
 import dev.fahim.tileGame.worlds.WorldManager;
 
 public class Game implements Runnable {
-	
-	//Graphics
+
+	// Graphics
 	private Display display;
 	private String title;
-	private int width,height;
+	private int width, height;
 	private BufferStrategy bs;
 	private Graphics g;
-	
-	//Thread
+
+	// Thread
 	private boolean keepRunning;
 	Thread thread;
-	
-	//States
-	private boolean paused = false;
+
+	// States
 	public State gameState;
 	public State menuState;
+	public State instructions;
 	public State inGameUI;
 	public State inventory;
 	public State quests;
-	
-	//Input
+
+	// Input
 	KeyManager keyManager;
 	MouseManager mouseManager;
-	
-	//Sounds
+
+	// Sounds
 	SoundManager soundManager;
-	
-	//Camera
+
+	// Camera
 	private GameCamera gameCamera;
-	
-	//Handler
+
+	// Handler
 	private Handler handler;
 	
+	//Player
 	private Player player;
-	
-	//Other
+
+	// Other
 	private QuestManager questManager;
-	public DialogueBank dialogueBank;
-	public QuestBank questBank;
-	private Food food;
-	
-	public Game(String title, int width, int height)
-	{
-		this.title=title;
-		this.width=width;
-		this.height=height;
+	private  String instructions_text = new String("WASD to move around\n"
+			+ "Z to shoot arrow\n"
+			+ "X to shoot fireball\n"
+			+ "I to access inventory\n");
+
+	public Game(String title, int width, int height) {
+		this.title = title;
+		this.width = width;
+		this.height = height;
 	}
-	
-	private void init()
-	{
-		
-		display = new Display(title,width,height);
-		Assets.load();
-		jmim.codenmore.game.grpx.Assets.init();
-		
+
+	private void init() {
+
+		//Instantiate handler
 		handler = new Handler(this);
 		
-		Utils.changeCursor(handler,0);
+		display = new Display(title, width, height);
 		
-		dialogueBank = new DialogueBank(handler);
-		questBank = new QuestBank(handler);
+		//Load assets
+		Assets.load(handler);
 		
-		food = new Food(handler);
-		food.init();
-		
-		gameCamera = new GameCamera(handler,0,0);
-		
+		//Change cursor
+		Utils.changeCursor(handler, 0);
+
+		gameCamera = new GameCamera(handler, 0, 0);
+
 		keyManager = new KeyManager();
 		mouseManager = new MouseManager();
-		
+
 		soundManager = new SoundManager();
-		
+
 		display.getFrame().addKeyListener(keyManager);
-		
+
 		display.getFrame().addMouseListener(mouseManager);
 		display.getFrame().addMouseMotionListener(mouseManager);
 		display.getCanvas().addMouseListener(mouseManager);
 		display.getCanvas().addMouseMotionListener(mouseManager);
-		
+
 		player = new Player(handler, 0, 0, 280, 280);
-		
+
 		gameState = new GameState(handler);
 		menuState = new MenuState(handler);
+		
+		instructions = new Notif(handler,
+				new Clicker(){
+					@Override
+					public void leftClick() {
+						StateManager.setCurrentState(handler.getGame().menuState);
+					}
+				}, instructions_text
+		);
+		
+		
 		inGameUI = new InGameUI(handler);
 		inventory = new Inventory(handler);
+		
 		questManager = new QuestManager(handler);
-		quests = new Quests(handler,questManager);
-		questBank.init();
+		quests = new Quests(handler, questManager);
+		
 		StateManager.setCurrentState(menuState);
-	
+
 	}
-	
-	private void tick()
-	{
-		
+
+	private void tick() {
+
 		keyManager.tick();
-		
+		mouseManager.tick();
 		soundManager.tick();
-		
-		if(StateManager.getCurrentState()!=null)
-		{
+
+		if (StateManager.getCurrentState() != null) {
 			StateManager.getCurrentState().tick();
 		}
-		
+
 	}
-	
-	private void render()
-	{
-		
+
+	private void render() {
+
 		bs = display.getCanvas().getBufferStrategy();
-		
-		if(bs==null)
-		{
+
+		if (bs == null) {
 			display.getCanvas().createBufferStrategy(3);
 			return;
 		}
-		
+
 		g = bs.getDrawGraphics();
-		
+
 		g.clearRect(0, 0, width, height);
-		
-		//Draw here
-		
-		if(StateManager.getCurrentState()!=null)
-		{
+
+		// Draw here
+
+		if (StateManager.getCurrentState() != null) {
 			StateManager.getCurrentState().render(g);
 		}
-		
-		//End drawing
-		
+
+		// End drawing
+
 		bs.show();
 		g.dispose();
-		
+
 	}
-	
-	public Player getPlayer()
-	{
-		return player;
-	}
-	
-	public KeyManager getKeyManager()
-	{
-		return keyManager;
-	}
-	
-	public MouseManager getMouseManager()
-	{
-		return mouseManager;
-	}
-	
-	public SoundManager getSoundManager()
-	{
-		return soundManager;
-	}
-	
-	public GameCamera getGameCamera()
-	{
-		return gameCamera;
-	}
-	
-	public int getWidth()
-	{
-		return width;
-	}
-	
-	public int getHeight()
-	{
-		return height;
-	}
-	
-	public Frame getFrame()
-	{
-		return display.getFrame();
-	}
-	
-	public DialogueBank getDialogueBank()
-	{
-		return dialogueBank;
-	}
-	
-	public void pause()
-	{
-		paused = true;
-	}
-	
-	public void resume()
-	{
-		paused = false;
-	}
-	
-	public WorldManager getWorldManager()
-	{
-		GameState g = (GameState)gameState;
-		return g.getWorldManager();
-	}
-	
-	public QuestManager getQuestManager()
-	{
-		return questManager;
-	}
-	
-	public void run()
-	{
-	
+
+	public void run() {
+
 		init();
-		
-		double fps=60;
-		double timePerTick = 1000000000/fps;
-		double delta=0;
+
+		double fps = 60;
+		double timePerTick = 1000000000 / fps;
+		double delta = 0;
 		double now;
 		double lastTime = System.nanoTime();
-		
-		while(keepRunning)
-		{
-			
-			now=System.nanoTime();
-			delta+=(now-lastTime)/timePerTick;
-			lastTime=now;
-			
-			if(delta>=1)
-			{
+
+		while (keepRunning) {
+
+			now = System.nanoTime();
+			delta += (now - lastTime) / timePerTick;
+			lastTime = now;
+
+			if (delta >= 1) {
 				tick();
 				render();
 				delta--;
 			}
 		}
-		
+
 	}
-	
-	public synchronized void start()
-	{
-		
-		if(keepRunning)
-		{
+
+	public synchronized void start() {
+
+		if (keepRunning) {
 			return;
+		} else {
+			keepRunning = true;
 		}
-		else
-		{
-			keepRunning=true;
-		}
-		
+
 		thread = new Thread(this);
 		thread.start();
 	}
-	
-	public synchronized void stop()
-	{
-		
-		if(!keepRunning)
-		{
+
+	public synchronized void stop() {
+
+		if (!keepRunning) {
 			return;
+		} else {
+			keepRunning = false;
 		}
-		else
-		{
-			keepRunning=false;
-		}
-		
+
 		try {
 			thread.join();
 		} catch (InterruptedException e) {
@@ -290,4 +215,45 @@ public class Game implements Runnable {
 		}
 	}
 	
+	public Player getPlayer() {
+		return player;
+	}
+
+	public KeyManager getKeyManager() {
+		return keyManager;
+	}
+
+	public MouseManager getMouseManager() {
+		return mouseManager;
+	}
+
+	public SoundManager getSoundManager() {
+		return soundManager;
+	}
+	
+	public QuestManager getQuestManager() {
+		return questManager;
+	}
+
+	public GameCamera getGameCamera() {
+		return gameCamera;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public Frame getFrame() {
+		return display.getFrame();
+	}
+
+	public WorldManager getWorldManager() {
+		GameState g = (GameState) gameState;
+		return g.getWorldManager();
+	}
+
 }

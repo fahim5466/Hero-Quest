@@ -11,14 +11,52 @@ public class MouseManager implements MouseListener, MouseMotionListener{
 	private boolean cantLeftPress=false, cantRightPress=false;
 	private int mouseX, mouseY;
 	
+	public void tick()
+	{
+		
+		//the input logic here is similar to the logic implemented in KeyManager
+		//please see the tick function in KeyManager
+		
+		//Left pressing
+		if(cantLeftPress && !leftPressed)
+		{
+			cantLeftPress = false;
+		}
+		else if(justLeftPressed)
+		{
+			cantLeftPress = true;
+			justLeftPressed = false;
+		}
+		else if(!cantLeftPress && leftPressed)
+		{
+			justLeftPressed = true;
+		}
+		
+		//right pressing
+		if(cantRightPress && !rightPressed)
+		{
+			cantRightPress = false;
+		}
+		else if(justRightPressed = true)
+		{
+			cantRightPress = true;
+			justRightPressed = false;
+		}
+		else if(!cantRightPress && rightPressed)
+		{
+			justRightPressed = true;
+		}
+		
+	}
+	
 	public boolean isLeftPresssed()
 	{
-		return leftPressed;
+		return justLeftPressed;
 	}
 	
 	public boolean isRightPressed()
 	{
-		return rightPressed;
+		return justRightPressed;
 	}
 	
 	public int getMouseX()

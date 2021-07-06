@@ -1,7 +1,9 @@
 package dev.fahim.tileGame.sounds;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -12,8 +14,8 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 public class SoundManager {
 
 	//Files
-	File battleMusic,menuMusic;
-	File swordHit,die,fireball,fireballImpact,arrowImpact,arrowShot;
+	InputStream battleMusic, menuMusic;
+	InputStream swordHit,die,fireball,fireballImpact,arrowImpact,arrowShot;
 	
 	//Audio streams
 	AudioInputStream battleMusicStream,menuMusicStream;
@@ -30,14 +32,14 @@ public class SoundManager {
 	try
 	{
 	
-	battleMusic = new File("F:/Eclipse workspace/TileGame/res/Sounds/lastBattle.wav");
-	menuMusic = new File("F:/Eclipse workspace/TileGame/res/Sounds/menuMusic.wav");
-	swordHit = new File("F:/Eclipse workspace/TileGame/res/Sounds/swordHit.wav");
-	die = new File("F:/Eclipse workspace/TileGame/res/Sounds/die.wav");
-	fireball = new File("F:/Eclipse workspace/TileGame/res/Sounds/fireball.wav");
-	fireballImpact = new File("F:/Eclipse workspace/TileGame/res/Sounds/fireballImpact.wav");
-	arrowImpact = new File("F:/Eclipse workspace/TileGame/res/Sounds/arrowImpact.wav");
-	arrowShot = new File("F:/Eclipse workspace/TileGame/res/Sounds/arrowShot.wav");
+	battleMusic = new BufferedInputStream(SoundManager.class.getResourceAsStream("/Sounds/lastBattle.wav"));
+	menuMusic = new BufferedInputStream(SoundManager.class.getResourceAsStream("/Sounds/menuMusic.wav"));
+	swordHit = new BufferedInputStream(SoundManager.class.getResourceAsStream("/Sounds/swordHit.wav"));
+	die = new BufferedInputStream(SoundManager.class.getResourceAsStream("/Sounds/die.wav"));
+	fireball = new BufferedInputStream(SoundManager.class.getResourceAsStream("/Sounds/fireball.wav"));
+	fireballImpact = new BufferedInputStream(SoundManager.class.getResourceAsStream("/Sounds/fireballImpact.wav"));
+	arrowImpact = new BufferedInputStream(SoundManager.class.getResourceAsStream("/Sounds/arrowImpact.wav"));
+	arrowShot = new BufferedInputStream(SoundManager.class.getResourceAsStream("/Sounds/arrowShot.wav"));
 	
 	battleMusicStream = AudioSystem.getAudioInputStream(battleMusic);
 	menuMusicStream = AudioSystem.getAudioInputStream(menuMusic);

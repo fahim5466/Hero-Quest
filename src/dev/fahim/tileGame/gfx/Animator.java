@@ -13,10 +13,15 @@ public class Animator {
 
 	private Creature c;
 	private Handler handler;
+	
+	//once an animation starts, no other animation can start until the current one finishes
+	//fixed indicates if any animation is ongoing
 	private boolean fixed=false;
+	
 	private Animation currentAnimation;
 	private ArrayList<Animation> animations;
 	
+	//if the sprite will be dyed with any color
 	private boolean dye=false;
 	private Color dyeColor;
 	
@@ -25,6 +30,7 @@ public class Animator {
 		this.c = c;
 		this.handler = handler;
 		
+		//by default faces towards the screen
 		currentAnimation=c.animDown;
 		
 		
@@ -57,11 +63,27 @@ public class Animator {
 			currentAnimation.tick();
 			if(currentAnimation.getCycle()==1)
 			{
+				//one animation cycle finished
+				
 				fixed=false;
 				
 				if(currentAnimation==c.animDie){return;}
 				
-				c.getController().animInfo();
+				if (currentAnimation == c.animBowUp
+					|| currentAnimation == c.animBowDown
+					|| currentAnimation == c.animBowLeft
+					|| currentAnimation == c.animBowRight)
+				{
+					c.getController().shootArrow();
+				}
+				
+				if (currentAnimation == c.animMagicUp
+					|| currentAnimation == c.animMagicDown
+					|| currentAnimation == c.animMagicLeft
+					|| currentAnimation == c.animMagicRight)
+				{
+					c.getController().shootFireball();
+				}
 				
 				if(c.getFace()==1){currentAnimation=c.animUp;}
 				else if(c.getFace()==2){currentAnimation=c.animRight;}
@@ -72,109 +94,122 @@ public class Animator {
 		else
 		{
 			
-		if(c.getController().isLeftPressed())
-		{
-			if(c.getFace()==1)
+			if(c.getController().isLeftPressed())
 			{
-				currentAnimation=c.animAttackUp;
-				fixed=true;
+				//creature is performing melee attack
+				if(c.getFace()==1)
+				{
+					currentAnimation=c.animAttackUp;
+					fixed=true;
+				}
+				else if(c.getFace()==2)
+				{
+					currentAnimation=c.animAttackRight;
+					fixed=true;
+				}
+				else if(c.getFace()==3)
+				{
+					currentAnimation=c.animAttackDown;
+					fixed=true;
+				}
+				else if(c.getFace()==4)
+				{
+					currentAnimation=c.animAttackLeft;
+					fixed=true;
+				}
+					
 			}
-			else if(c.getFace()==2)
+			else if(c.getController().isZ())
 			{
-				currentAnimation=c.animAttackRight;
-				fixed=true;
+				//creature is performing ranged attack
+				if(c.getFace()==1)
+				{
+					currentAnimation=c.animBowUp;
+					fixed=true;
+				}
+				else if(c.getFace()==2)
+				{
+					currentAnimation=c.animBowRight;
+					fixed=true;
+				}
+				else if(c.getFace()==3)
+				{
+					currentAnimation=c.animBowDown;
+					fixed=true;
+				}
+				else if(c.getFace()==4)
+				{
+					currentAnimation=c.animBowLeft;
+					fixed=true;
+				}
+					
 			}
-			else if(c.getFace()==3)
+			else if(c.getController().isX())
 			{
-				currentAnimation=c.animAttackDown;
-				fixed=true;
+				//creature is performing magic attack
+				if(c.getFace()==1)
+				{
+					currentAnimation=c.animMagicUp;
+					fixed=true;
+				}
+				else if(c.getFace()==2)
+				{
+					currentAnimation=c.animMagicRight;
+					fixed=true;
+				}
+				else if(c.getFace()==3)
+				{
+					currentAnimation=c.animMagicDown;
+					fixed=true;
+				}
+				else if(c.getFace()==4)
+				{
+					currentAnimation=c.animMagicLeft;
+					fixed=true;
+				}
+					
 			}
-			else if(c.getFace()==4)
+			else if(c.getController().isLeft())
 			{
-				currentAnimation=c.animAttackLeft;
-				fixed=true;
-			}
+				//creature is moving left
+				currentAnimation=c.animLeft;
+				c.setFace(4);
 				
-		}
-		else if(c.getController().isZ())
-		{
-			if(c.getFace()==1)
-			{
-				currentAnimation=c.animBowUp;
-				fixed=true;
 			}
-			else if(c.getFace()==2)
+			else if(c.getController().isRight())
 			{
-				currentAnimation=c.animBowRight;
-				fixed=true;
+				//creature is moving right
+				currentAnimation=c.animRight;
+				c.setFace(2);
 			}
-			else if(c.getFace()==3)
+			else if(c.getController().isDown())
 			{
-				currentAnimation=c.animBowDown;
-				fixed=true;
-			}
-			else if(c.getFace()==4)
-			{
-				currentAnimation=c.animBowLeft;
-				fixed=true;
-			}
+				//creature is moving down
+				currentAnimation=c.animDown;
+				c.setFace(3);
 				
-		}
-		else if(c.getController().isX())
-		{
-			if(c.getFace()==1)
-			{
-				currentAnimation=c.animMagicUp;
-				fixed=true;
 			}
-			else if(c.getFace()==2)
+			else if(c.getController().isUp())
 			{
-				currentAnimation=c.animMagicRight;
-				fixed=true;
+				//creature is moving up
+				currentAnimation=c.animUp;
+				c.setFace(1);
 			}
-			else if(c.getFace()==3)
+			else
 			{
-				currentAnimation=c.animMagicDown;
-				fixed=true;
-			}
-			else if(c.getFace()==4)
-			{
-				currentAnimation=c.animMagicLeft;
-				fixed=true;
-			}
+				//this is important
+				//if the creature is doing nothing
+				//then he will stand still facing the direction his 'face' variable is set to
+				//this is simulated by setting animation to one of the move animations
+				//and resetting it at each tick
+				//because we are resetting at each tick the animation is not animated
+				//for example if creature is facing right
+				//current animation is set to animRight and is reset at each tick
+				currentAnimation.reset();
 				
-		}
-		else if(c.getController().isLeft())
-		{
+			}
 			
-			currentAnimation=c.animLeft;
-			c.setFace(4);
-			
-		}
-		else if(c.getController().isRight())
-		{
-			currentAnimation=c.animRight;
-			c.setFace(2);
-		}
-		else if(c.getController().isDown())
-		{
-			currentAnimation=c.animDown;
-			c.setFace(3);
-			
-		}
-		else if(c.getController().isUp())
-		{
-			currentAnimation=c.animUp;
-			c.setFace(1);
-		}
-		else
-		{
-			
-			currentAnimation.reset();
-			
-		}
-		
-		currentAnimation.tick();
+			currentAnimation.tick();
 		
 		}
 		
